@@ -1,5 +1,5 @@
 {
-  "name": "typestream",
+  "name": "node-typestream",
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
