@@ -17,8 +17,8 @@ tstream.pipeline(
 ).then(() => console.log('complete'))
 
 // Invalid pipeline
-tstream.pipeline(
-  new tstream.Readable<Buffer>(),
-  new tstream.Duplex<Buffer, string>(),
-  new tstream.Writable<Buffer>()
-).then(() => console.log('complete'))
+// tstream.pipeline(
+//   new tstream.Readable<Buffer>(),
+//   new tstream.Duplex<Buffer, string>(),
+//   new tstream.Writable<Buffer>()
+// ).then(() => console.log('complete'))

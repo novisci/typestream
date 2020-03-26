@@ -17,6 +17,12 @@ class Writable extends stream_1.Stream {
     _createStream(opts) {
         return new stream.Writable(opts);
     }
+    destroy(error) {
+        return this.stream.destroy(error);
+    }
+    _destroy(error, cb) {
+        return this.stream._destroy(error, cb);
+    }
     end(chunk, encoding, cb) {
         return this.stream.end(chunk, encoding, cb);
     }

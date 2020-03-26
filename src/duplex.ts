@@ -1,7 +1,7 @@
 import * as stream from 'stream'
 import { Stream, Options } from './stream'
 import { Readable } from './readable'
-import { WritableOptions } from './writable'
+import { Writable, WritableOptions } from './writable'
 
 
 /***
@@ -39,8 +39,29 @@ export class Duplex<I, O> extends Stream<I, O, stream.Duplex, DuplexOptions<I, O
     this.writable = this.stream.writable
   }
 
-  _createStream (opts?: WritableOptions<I>): stream.Duplex {
+  _createStream (opts?: DuplexOptions<I, O>): stream.Duplex {
     return new stream.Duplex(opts as stream.DuplexOptions)
+  }
+
+  push (chunk: O|null, encoding?: string): boolean {
+    return this.stream.push(chunk, encoding)
+  }
+
+  destroy (error?: Error): void {
+    return this.stream.destroy(error)
+  }
+
+  _destroy (error: Error|null, cb:(error?: Error | null | undefined) => void): void {
+    return this.stream._destroy(error, cb)
+  }
+
+  unpipe(destination?: Writable<O>): this {
+    this.stream.unpipe(destination as unknown as NodeJS.WritableStream)
+    return this
+  }
+
+  read (count?: number): boolean {
+    return this.stream.read(count)
   }
 
   end (cb?: () => void): void
@@ -175,7 +196,7 @@ export  class Transform<I, O> extends Duplex<I, O> {
     super(opts)
   }
 
-  _createStream (opts?: WritableOptions<I>): stream.Duplex {
+  _createStream (opts?: TransformOptions<I, O>): stream.Duplex {
     return new stream.Transform(opts as stream.TransformOptions)
   }
 }

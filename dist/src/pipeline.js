@@ -17,7 +17,7 @@ function pipeline(...args) {
     }
     const a0 = args.shift();
     const a1 = args.shift();
-    return prPipeline(a0, a1, ...args);
+    return prPipeline(a0.stream, a1.stream, ...args.map((a) => a.stream));
 }
 exports.pipeline = pipeline;
 // Testing

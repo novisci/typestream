@@ -16,11 +16,21 @@ class Readable extends stream_1.Stream {
     _createStream(opts) {
         return new stream.Readable(opts);
     }
+    read(count) {
+        return this.stream.read(count);
+    }
     push(chunk, encoding) {
         return this.stream.push(chunk, encoding);
     }
     destroy(error) {
         return this.stream.destroy(error);
+    }
+    _destroy(error, cb) {
+        return this.stream._destroy(error, cb);
+    }
+    unpipe(destination) {
+        this.stream.unpipe(destination);
+        return this;
     }
     addListener(event, listener) {
         this.stream.addListener(event, listener);

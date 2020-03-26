@@ -1,5 +1,6 @@
 import * as stream from 'stream'
 import { Stream, Options } from './stream'
+import { Writable } from './writable'
 
 // const readableEvents = ['close', 'data', 'end', 'readable', 'error'] as const
 // type ReadableEvent = typeof readableEvents[number]
@@ -16,6 +17,11 @@ export interface ReadableOptions<O> extends Options<O, O> {
   autoDestroy?: boolean
 }
 
+export interface NotifyData {
+  type: string,
+  [key: string]: any
+}
+
 export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O>> {
   constructor (opts?: ReadableOptions<O>) {
     super(opts)
@@ -25,7 +31,11 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
     return new stream.Readable(opts as stream.ReadableOptions)
   }
 
-  push (chunk: O, encoding?: string): boolean {
+  read (count?: number): any {
+    return this.stream.read(count)
+  }
+
+  push (chunk: O|null, encoding?: string): boolean {
     return this.stream.push(chunk, encoding)
   }
 
@@ -33,11 +43,21 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
     return this.stream.destroy(error)
   }
 
+  _destroy (error: Error|null, cb:(error?: Error | null | undefined) => void): void {
+    return this.stream._destroy(error, cb)
+  }
+
+  unpipe(destination?: Writable<O>): this {
+    this.stream.unpipe(destination as unknown as  NodeJS.WritableStream)
+    return this
+  }
+
   addListener(event: "close", listener: () => void): this
   addListener(event: "data", listener: (chunk: any) => void): this
   addListener(event: "end", listener: () => void): this
   addListener(event: "readable", listener: () => void): this
   addListener(event: "error", listener: (err: Error) => void): this
+  addListener(event: "notify", listener: (data: NotifyData) => void): this
   addListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this.stream.addListener(event, listener)
     return this
@@ -48,6 +68,7 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
   emit(event: "end"): boolean
   emit(event: "readable"): boolean
   emit(event: "error", err: Error): boolean
+  emit(event: "notify", data: NotifyData): boolean
   emit(event: string | symbol, ...args: any[]): boolean {
     return this.stream.emit(event, ...args)
   }
@@ -57,6 +78,7 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
   on(event: "end", listener: () => void): this
   on(event: "readable", listener: () => void): this
   on(event: "error", listener: (err: Error) => void): this
+  on(event: "notify", listener: (data: NotifyData) => void): this
   on(event: string | symbol, listener: (...args: any[]) => void): this {
     this.stream.on(event, listener)
     return this
@@ -67,6 +89,7 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
   once(event: "end", listener: () => void): this
   once(event: "readable", listener: () => void): this
   once(event: "error", listener: (err: Error) => void): this
+  once(event: "notify", listener: (data: NotifyData) => void): this
   once(event: string | symbol, listener: (...args: any[]) => void): this {
     this.stream.once(event, listener)
     return this
@@ -77,6 +100,7 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
   prependListener(event: "end", listener: () => void): this
   prependListener(event: "readable", listener: () => void): this
   prependListener(event: "error", listener: (err: Error) => void): this
+  prependListener(event: "notify", listener: (data: NotifyData) => void): this
   prependListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this.stream.prependListener(event, listener)
     return this
@@ -87,6 +111,7 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
   prependOnceListener(event: "end", listener: () => void): this
   prependOnceListener(event: "readable", listener: () => void): this
   prependOnceListener(event: "error", listener: (err: Error) => void): this
+  prependOnceListener(event: "notify", listener: (data: NotifyData) => void): this
   prependOnceListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this.stream.prependOnceListener(event, listener)
     return this
@@ -97,6 +122,7 @@ export class Readable<O> extends Stream<O, O, stream.Readable, ReadableOptions<O
   removeListener(event: "end", listener: () => void): this
   removeListener(event: "readable", listener: () => void): this
   removeListener(event: "error", listener: (err: Error) => void): this
+  removeListener(event: "notify", listener: (data: NotifyData) => void): this
   removeListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this.stream.removeListener(event, listener)
     return this

@@ -33,6 +33,14 @@ export class Writable<I> extends Stream<I, I, stream.Writable, WritableOptions<I
     return new stream.Writable(opts as stream.WritableOptions)
   }
 
+  destroy (error?: Error): void {
+    return this.stream.destroy(error)
+  }
+
+  _destroy (error: Error|null, cb:(error?: Error | null | undefined) => void): void {
+    return this.stream._destroy(error, cb)
+  }
+
   end (cb?: CbVoid): void
   end (chunk: I, cb?: CbVoid): void
   end (chunk: I, encoding?: string, cb?: CbVoid): void

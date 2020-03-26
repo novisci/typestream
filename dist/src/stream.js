@@ -11,7 +11,12 @@ const events = __importStar(require("events"));
 class Stream extends events.EventEmitter {
     constructor(opts) {
         super();
-        this.stream = this._createStream(opts);
+        if (opts && opts.stream) {
+            this.stream = opts.stream;
+        }
+        else {
+            this.stream = this._createStream(opts);
+        }
     }
     pipe(destination, options) {
         this.stream.pipe(destination.stream, options);

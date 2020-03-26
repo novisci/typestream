@@ -6,7 +6,8 @@ import { Writable } from './writable'
  * STREAM
  */
 export interface Options<I, O> {
-
+  stream?: stream.Stream
+  [key: string]: any
 }
 
 export abstract class Stream<I, O, S extends stream.Stream, Opts extends Options<I, O>> extends events.EventEmitter {
@@ -14,7 +15,11 @@ export abstract class Stream<I, O, S extends stream.Stream, Opts extends Options
 
   constructor (opts?: Opts) {
     super()
-    this.stream = this._createStream(opts)
+    if (opts && opts.stream) {
+      this.stream = opts.stream as S
+    } else {
+      this.stream = this._createStream(opts)
+    }
   }
 
   abstract _createStream (opts?: Opts): S

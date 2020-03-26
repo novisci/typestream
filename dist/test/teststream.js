@@ -18,5 +18,9 @@ readStream.pipe(bufferWriteStream);
 // Valid pipeline
 tstream.pipeline(new tstream.Readable(), new tstream.Duplex(), new tstream.Writable()).then(() => console.log('complete'));
 // Invalid pipeline
-tstream.pipeline(new tstream.Readable(), new tstream.Duplex(), new tstream.Writable()).then(() => console.log('complete'));
+// tstream.pipeline(
+//   new tstream.Readable<Buffer>(),
+//   new tstream.Duplex<Buffer, string>(),
+//   new tstream.Writable<Buffer>()
+// ).then(() => console.log('complete'))
 //# sourceMappingURL=teststream.js.map

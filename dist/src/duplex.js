@@ -17,6 +17,22 @@ class Duplex extends stream_1.Stream {
     _createStream(opts) {
         return new stream.Duplex(opts);
     }
+    push(chunk, encoding) {
+        return this.stream.push(chunk, encoding);
+    }
+    destroy(error) {
+        return this.stream.destroy(error);
+    }
+    _destroy(error, cb) {
+        return this.stream._destroy(error, cb);
+    }
+    unpipe(destination) {
+        this.stream.unpipe(destination);
+        return this;
+    }
+    read(count) {
+        return this.stream.read(count);
+    }
     end(chunk, encoding, cb) {
         return this.stream.end(chunk, encoding, cb);
     }
