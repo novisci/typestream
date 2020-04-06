@@ -10,11 +10,11 @@ export interface Options<I, O> {
   [key: string]: any
 }
 
-export abstract class Stream<I, O, S extends stream.Stream, Opts extends Options<I, O>> extends events.EventEmitter {
+export abstract class Stream<I, O, S extends stream.Stream, Opts extends Options<I, O>> /* extends events.EventEmitter */ {
   stream: S
 
   constructor (opts?: Opts) {
-    super()
+    // super()
     if (opts && opts.stream) {
       this.stream = opts.stream as S
     } else {
